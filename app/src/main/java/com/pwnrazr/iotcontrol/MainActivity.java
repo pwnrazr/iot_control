@@ -18,15 +18,15 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
     // Global variables
-    String esp32_receiveMsg = "";
-    String relay_node_receiveMsg = "";
-    String[] esp32_receiveMsg_split;
-    String[] relay_node_receiveMsg_split;
+    static String esp32_receiveMsg = "";
+    static String relay_node_receiveMsg = "";
+    static String[] esp32_receiveMsg_split;
+    static String[] relay_node_receiveMsg_split;
 
-    boolean esp32_updateReady = false;
-    boolean relay_node_updateReady = false;
+    static boolean esp32_updateReady = false;
+    static boolean relay_node_updateReady = false;
 
-    private class esp32_comm extends AsyncTask<String, Void, String> {  // Communication to ESP32 nodeMCU
+    static class esp32_comm extends AsyncTask<String, Void, String> {  // Communication to ESP32 nodeMCU
         @Override
         protected String doInBackground(String... params) {
             try {
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
-    private class relay_node_comm extends AsyncTask<String, Void, String> {  // Communication to ESP8266 relay node
+    static class relay_node_comm extends AsyncTask<String, Void, String> {  // Communication to ESP8266 relay node
         @Override
         protected String doInBackground(String... params) {
             try {
