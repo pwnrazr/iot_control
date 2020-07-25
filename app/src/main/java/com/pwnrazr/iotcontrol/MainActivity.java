@@ -97,6 +97,12 @@ public class MainActivity extends AppCompatActivity {
         final ToggleButton relay2_toggle = findViewById(R.id.relay2_toggle);
         final ToggleButton relay3_toggle = findViewById(R.id.relay3_toggle);
 
+        esp32_led_toggle.setEnabled(false);
+        relay0_toggle.setEnabled(false);
+        relay1_toggle.setEnabled(false);
+        relay2_toggle.setEnabled(false);
+        relay3_toggle.setEnabled(false);
+
         // on app startup get status of things
         new esp32_comm().execute("reqled");     //Request status of LED on app startup
 
@@ -107,55 +113,70 @@ public class MainActivity extends AppCompatActivity {
 
         new CountDownTimer(5, 5)  //loop update buttons
         {
+            int bootCheck = 0;
             public void onTick(long l) {}
             public void onFinish()
             {
-                if(esp32_updateReady) {   //Only update when there's actually something to update
-                    TextView debugText = findViewById(R.id.debugText);
-                    debugText.setText(String.format("%s=%s",esp32_receiveMsg_split[0], esp32_receiveMsg_split[1]));
-                    if (esp32_receiveMsg_split[0].equals("LED")) {
-                        if (esp32_receiveMsg_split[1].equals("ON")) {
-                            esp32_led_toggle.setChecked(true);
-                        } else {
-                            esp32_led_toggle.setChecked(false);
+                if(bootCheck!=4) {
+                    if (esp32_updateReady) {   //Only update when there's actually something to update
+                        TextView debugText = findViewById(R.id.debugText);
+                        debugText.setText(String.format("%s=%s", esp32_receiveMsg_split[0], esp32_receiveMsg_split[1]));
+                        if (esp32_receiveMsg_split[0].equals("LED")) {
+                            if (esp32_receiveMsg_split[1].equals("ON")) {
+                                esp32_led_toggle.setChecked(true);
+                            } else {
+                                esp32_led_toggle.setChecked(false);
+                            }
+                            bootCheck++;
                         }
+                        esp32_updateReady = false;
                     }
-                    esp32_updateReady = false;
+                    if (relay_node_updateReady) {
+                        TextView debugText = findViewById(R.id.debugText);
+                        debugText.setText(String.format("%s=%s", relay_node_receiveMsg_split[0], relay_node_receiveMsg_split[1]));
+                        if (relay_node_receiveMsg_split[0].equals("relay0")) {
+                            if (relay_node_receiveMsg_split[1].equals("on")) {
+                                relay0_toggle.setChecked(true);
+                            } else {
+                                relay0_toggle.setChecked(false);
+                            }
+                            bootCheck++;
+                        }
+                        if (relay_node_receiveMsg_split[0].equals("relay1")) {
+                            if (relay_node_receiveMsg_split[1].equals("on")) {
+                                relay1_toggle.setChecked(true);
+                            } else {
+                                relay1_toggle.setChecked(false);
+                            }
+                            bootCheck++;
+                        }
+                        if (relay_node_receiveMsg_split[0].equals("relay2")) {
+                            if (relay_node_receiveMsg_split[1].equals("on")) {
+                                relay2_toggle.setChecked(true);
+                            } else {
+                                relay2_toggle.setChecked(false);
+                            }
+                            bootCheck++;
+                        }
+                        if (relay_node_receiveMsg_split[0].equals("relay3")) {
+                            if (relay_node_receiveMsg_split[1].equals("on")) {
+                                relay3_toggle.setChecked(true);
+                            } else {
+                                relay3_toggle.setChecked(false);
+                            }
+                            bootCheck++;
+                        }
+                        relay_node_updateReady = false;
+                    }
+                    if(bootCheck==4) {
+                        esp32_led_toggle.setEnabled(true);
+                        relay0_toggle.setEnabled(true);
+                        relay1_toggle.setEnabled(true);
+                        relay2_toggle.setEnabled(true);
+                        relay3_toggle.setEnabled(true);
+                    }
+                    start();
                 }
-                if(relay_node_updateReady){
-                    TextView debugText = findViewById(R.id.debugText);
-                    debugText.setText(String.format("%s=%s",relay_node_receiveMsg_split[0], relay_node_receiveMsg_split[1]));
-                    if(relay_node_receiveMsg_split[0].equals("relay0")) {
-                        if(relay_node_receiveMsg_split[1].equals("on")) {
-                            relay0_toggle.setChecked(true);
-                        } else {
-                            relay0_toggle.setChecked(false);
-                        }
-                    }
-                    if(relay_node_receiveMsg_split[0].equals("relay1")) {
-                        if(relay_node_receiveMsg_split[1].equals("on")) {
-                            relay1_toggle.setChecked(true);
-                        } else {
-                            relay1_toggle.setChecked(false);
-                        }
-                    }
-                    if(relay_node_receiveMsg_split[0].equals("relay2")) {
-                        if(relay_node_receiveMsg_split[1].equals("on")) {
-                            relay2_toggle.setChecked(true);
-                        } else {
-                            relay2_toggle.setChecked(false);
-                        }
-                    }
-                    if(relay_node_receiveMsg_split[0].equals("relay3")) {
-                        if(relay_node_receiveMsg_split[1].equals("on")) {
-                            relay3_toggle.setChecked(true);
-                        } else {
-                            relay3_toggle.setChecked(false);
-                        }
-                    }
-                    relay_node_updateReady = false;
-                }
-                start();
             }
         }.start();
 
