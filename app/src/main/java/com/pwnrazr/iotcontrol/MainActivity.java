@@ -13,7 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
-    public static class http_comm extends Thread {  // Communication to ESP8266 relay node
+    public static class http_comm extends Thread {  // Communications
         String receiveMsg = "";
         String[] receiveMsg_split = {"",""};
         boolean updateReady = false;
