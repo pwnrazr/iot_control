@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         String[] receiveMsg_split = {"",""};
         boolean updateReady = false;
 
-        String url = "";
+        String url;
         http_comm(String url){
             this.url = url;
         }
