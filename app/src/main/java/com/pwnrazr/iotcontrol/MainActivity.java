@@ -2,10 +2,17 @@ package com.pwnrazr.iotcontrol;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
@@ -43,12 +50,56 @@ public class MainActivity extends AppCompatActivity {
             }.start();
         }
     }
+
+    public class settings {
+        SharedPreferences sharedPref = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        final String esp32_ip_default = "192.168.1.183";
+        final String nodeRelay_ip_default = "192.168.1.161";
+        String esp32_ip = "";
+        String nodeRelay_ip = "";
+        EditText in_esp32_ip = findViewById(R.id.input_esp32_ip);
+        EditText in_nodeRelay_ip = findViewById(R.id.input_noderelay_ip);
+
+        void startup() {
+            if(!read("esp32_ip").equals("ERROR")){
+                esp32_ip = read("esp32_ip");
+                in_esp32_ip.setText(read("esp32_ip"));
+            } else {
+                esp32_ip = esp32_ip_default;
+                in_esp32_ip.setText(esp32_ip_default);
+            }
+            if(!read("nodeRelay_ip").equals("ERROR")){
+                nodeRelay_ip = read("nodeRelay_ip");
+                in_nodeRelay_ip.setText(read("nodeRelay_ip"));
+            } else {
+                nodeRelay_ip = nodeRelay_ip_default;
+                in_nodeRelay_ip.setText(nodeRelay_ip_default);
+            }
+        }
+        void write(String key, String value) {
+            editor.putString(key, value);
+            editor.apply();
+            Log.i("iot_control", "Saved - Key:" + key + " Value:" + value);
+        }
+        String read(String key) {
+            return sharedPref.getString(key, "ERROR");
+        }
+}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {    // The actual program
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Declarations
+
+        // Settings related
+        final settings prefsSet = new settings();
+        prefsSet.startup();
+        Button prefsSave_button = findViewById(R.id.saveButton);
+
         final ToggleButton esp32_led_toggle = findViewById(R.id.esp32_led_toggle);
         final ToggleButton relay0_toggle = findViewById(R.id.relay0_toggle);
         final ToggleButton relay1_toggle = findViewById(R.id.relay1_toggle);
@@ -56,11 +107,11 @@ public class MainActivity extends AppCompatActivity {
         final ToggleButton relay3_toggle = findViewById(R.id.relay3_toggle);
 
         //communications part
-        final http_comm esp32_comm_0 = new http_comm("192.168.1.183");
-        final http_comm relay_node_comm_0 = new http_comm("192.168.1.161");
-        final http_comm relay_node_comm_1 = new http_comm("192.168.1.161");
-        final http_comm relay_node_comm_2 = new http_comm("192.168.1.161");
-        final http_comm relay_node_comm_3 = new http_comm("192.168.1.161");
+        final http_comm esp32_comm_0 = new http_comm(prefsSet.esp32_ip);
+        final http_comm relay_node_comm_0 = new http_comm(prefsSet.nodeRelay_ip);
+        final http_comm relay_node_comm_1 = new http_comm(prefsSet.nodeRelay_ip);
+        final http_comm relay_node_comm_2 = new http_comm(prefsSet.nodeRelay_ip);
+        final http_comm relay_node_comm_3 = new http_comm(prefsSet.nodeRelay_ip);
 
         // Disable buttons
         esp32_led_toggle.setEnabled(false);
@@ -140,6 +191,22 @@ public class MainActivity extends AppCompatActivity {
                 start();
             }
         }.start();
+
+        prefsSave_button.setOnClickListener(new View.OnClickListener() {    // Save preferences button
+            @Override
+            public void onClick(View view) {
+                prefsSet.write("esp32_ip", prefsSet.in_esp32_ip.getText().toString());
+                prefsSet.write("nodeRelay_ip", prefsSet.in_nodeRelay_ip.getText().toString());
+
+                // Restart function
+                //get parent activity
+                Activity current = MainActivity.this;
+                //start a same new one
+                current.startActivity(new Intent(MainActivity.this.getApplicationContext(),current.getClass()));
+                //finish current
+                current.finish();
+            }
+        });
 
         esp32_led_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {  // Ambient LED
             @Override
