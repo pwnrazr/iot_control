@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("iot_control", Integer.toString(relay_node_connection.getResponseCode()));
                         Log.i("iot_control", relay_node_connection.getResponseMessage());
                         receiveMsg = relay_node_connection.getResponseMessage();
-                        receiveMsg_split = receiveMsg.split(",");  //splits receiveMsg with comma(,) as separator
+                        receiveMsg_split = receiveMsg.split(",");  // Splits receiveMsg with comma(,) as separator
                         updateReady = true;
 
-                        //relay_node_connection.disconnect();       //potentially unneeded
+                        //relay_node_connection.disconnect();       // Potentially unneeded
                     } catch (IOException e) {
                         Log.e("iot_control", e.toString());
                     }
@@ -121,18 +121,18 @@ public class MainActivity extends AppCompatActivity {
         relay3_toggle.setEnabled(false);
 
         // on app startup get status of things
-        esp32_comm_0.execute("reqled");     //Request status of LED on app startup
+        esp32_comm_0.execute("reqled");     // Request status of LED on app startup
         relay_node_comm_0.execute("req_relay0");
         relay_node_comm_1.execute("req_relay1");
         relay_node_comm_2.execute("req_relay2");
         relay_node_comm_3.execute("req_relay3");
 
-        new CountDownTimer(5, 5)  //loop update buttons
+        new CountDownTimer(5, 5)  // Loop update buttons
         {
             public void onTick(long l) {}
             public void onFinish()
             {
-                if (esp32_comm_0.updateReady) {   //Only update when there's actually something to update
+                if (esp32_comm_0.updateReady) {   // Only update when there's actually something to update
                     if (esp32_comm_0.receiveMsg_split[0].equals("LED")) {
                         if (esp32_comm_0.receiveMsg_split[1].equals("ON")) {
                             esp32_led_toggle.setChecked(true);
@@ -199,12 +199,9 @@ public class MainActivity extends AppCompatActivity {
                 prefsSet.write("nodeRelay_ip", prefsSet.in_nodeRelay_ip.getText().toString());
 
                 // Restart function
-                //get parent activity
-                Activity current = MainActivity.this;
-                //start a same new one
-                current.startActivity(new Intent(MainActivity.this.getApplicationContext(),current.getClass()));
-                //finish current
-                current.finish();
+                Activity current = MainActivity.this;   // Get parent activity
+                current.startActivity(new Intent(MainActivity.this.getApplicationContext(),current.getClass()));    // Start a same new one
+                current.finish();   // Finish current
             }
         });
 
