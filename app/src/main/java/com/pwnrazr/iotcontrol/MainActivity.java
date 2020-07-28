@@ -33,16 +33,16 @@ public class MainActivity extends AppCompatActivity {
             new Thread() {
                 public void run() {
                     try {
-                        URL relay_node_url = new URL("http://" + url + "/?" + command[0]);
-                        HttpURLConnection relay_node_connection = (HttpURLConnection) relay_node_url.openConnection();
+                        URL connection_url = new URL("http://" + url + "/?" + command[0]);
+                        HttpURLConnection connection = (HttpURLConnection) connection_url.openConnection();
 
-                        Log.i("iot_control", Integer.toString(relay_node_connection.getResponseCode()));
-                        Log.i("iot_control", relay_node_connection.getResponseMessage());
-                        receiveMsg = relay_node_connection.getResponseMessage();
+                        Log.i("iot_control", Integer.toString(connection.getResponseCode()));
+                        Log.i("iot_control", connection.getResponseMessage());
+                        receiveMsg = connection.getResponseMessage();
                         receiveMsg_split = receiveMsg.split(",");  // Splits receiveMsg with comma(,) as separator
                         updateReady = true;
 
-                        //relay_node_connection.disconnect();       // Potentially unneeded
+                        //connection.disconnect();       // Potentially unneeded
                     } catch (IOException e) {
                         Log.e("iot_control", e.toString());
                     }
