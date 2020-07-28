@@ -15,14 +15,15 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ToggleButton;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
     public static class http_comm extends Thread {  // Communications
-        String receiveMsg = "";
-        String[] receiveMsg_split = {"",""};
+        String[] content_split = {"",""};
         boolean updateReady = false;
 
         String url;
@@ -33,13 +34,18 @@ public class MainActivity extends AppCompatActivity {
             new Thread() {
                 public void run() {
                     try {
-                        URL connection_url = new URL("http://" + url + "/?" + command[0]);
+                        URL connection_url = new URL("http://" + url + "/" + command[0]);
                         HttpURLConnection connection = (HttpURLConnection) connection_url.openConnection();
 
-                        Log.i("iot_control", Integer.toString(connection.getResponseCode()));
-                        Log.i("iot_control", connection.getResponseMessage());
-                        receiveMsg = connection.getResponseMessage();
-                        receiveMsg_split = receiveMsg.split(",");  // Splits receiveMsg with comma(,) as separator
+                        // Get content
+                        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                        StringBuilder result = new StringBuilder();
+                        String inputLine;
+                        while ((inputLine = in.readLine()) != null)
+                            result.append(inputLine).append("\n");
+
+                        content_split = result.toString().split(",");
+                        Log.i("iot_control", "content: " + content_split[0] + "=" + content_split[1]);
                         updateReady = true;
 
                         //connection.disconnect();       // Potentially unneeded
@@ -133,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish()
             {
                 if (esp32_comm_0.updateReady) {   // Only update when there's actually something to update
-                    if (esp32_comm_0.receiveMsg_split[0].equals("LED")) {
-                        if (esp32_comm_0.receiveMsg_split[1].equals("ON")) {
+                    if (esp32_comm_0.content_split[0].equals("LED")) {
+                        if (esp32_comm_0.content_split[1].equals("ON")) {
                             esp32_led_toggle.setChecked(true);
                         } else {
                             esp32_led_toggle.setChecked(false);
@@ -144,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if(relay_node_comm_0.updateReady) {
-                    if (relay_node_comm_0.receiveMsg_split[0].equals("relay0")) {
-                        if (relay_node_comm_0.receiveMsg_split[1].equals("on")) {
+                    if (relay_node_comm_0.content_split[0].equals("relay0")) {
+                        if (relay_node_comm_0.content_split[1].equals("on")) {
                             relay0_toggle.setChecked(true);
                         } else {
                             relay0_toggle.setChecked(false);
@@ -155,8 +161,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if(relay_node_comm_1.updateReady) {
-                    if (relay_node_comm_1.receiveMsg_split[0].equals("relay1")) {
-                        if (relay_node_comm_1.receiveMsg_split[1].equals("on")) {
+                    if (relay_node_comm_1.content_split[0].equals("relay1")) {
+                        if (relay_node_comm_1.content_split[1].equals("on")) {
                             relay1_toggle.setChecked(true);
                         } else {
                             relay1_toggle.setChecked(false);
@@ -166,8 +172,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if(relay_node_comm_2.updateReady) {
-                    if (relay_node_comm_2.receiveMsg_split[0].equals("relay2")) {
-                        if (relay_node_comm_2.receiveMsg_split[1].equals("on")) {
+                    if (relay_node_comm_2.content_split[0].equals("relay2")) {
+                        if (relay_node_comm_2.content_split[1].equals("on")) {
                             relay2_toggle.setChecked(true);
                         } else {
                             relay2_toggle.setChecked(false);
@@ -177,8 +183,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if(relay_node_comm_3.updateReady) {
-                    if (relay_node_comm_3.receiveMsg_split[0].equals("relay3")) {
-                        if (relay_node_comm_3.receiveMsg_split[1].equals("on")) {
+                    if (relay_node_comm_3.content_split[0].equals("relay3")) {
+                        if (relay_node_comm_3.content_split[1].equals("on")) {
                             relay3_toggle.setChecked(true);
                         } else {
                             relay3_toggle.setChecked(false);
