@@ -44,9 +44,11 @@ public class MainActivity extends AppCompatActivity {
                         while ((inputLine = in.readLine()) != null)
                             result.append(inputLine).append("\n");
 
-                        content_split = result.toString().split(",");
-                        Log.i("iot_control", "content: " + content_split[0] + "=" + content_split[1]);
-                        updateReady = true;
+                        if(connection.getResponseCode()!=204) {     // Guard from crashing due to result being empty when a command is sent (receive no content)
+                            content_split = result.toString().split(",");
+                            Log.i("iot_control", "content: " + content_split[0] + "=" + content_split[1]);
+                            updateReady = true;
+                        }
 
                         //connection.disconnect();       // Potentially unneeded
                     } catch (IOException e) {
