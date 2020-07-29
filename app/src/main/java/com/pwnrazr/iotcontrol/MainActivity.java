@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             esp32_ip = esp32_ip_default;
             in_esp32_ip.setText(esp32_ip_default);
+            prefsSet.write("esp32_ip", esp32_ip_default);
         }
         if(!prefsSet.read("nodeRelay_ip").equals("ERROR")){
             nodeRelay_ip = prefsSet.read("nodeRelay_ip");
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             nodeRelay_ip = nodeRelay_ip_default;
             in_nodeRelay_ip.setText(nodeRelay_ip_default);
+            prefsSet.write("nodeRelay_ip", nodeRelay_ip_default);
         }
 
         //communications part
