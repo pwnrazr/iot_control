@@ -63,29 +63,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        final String esp32_ip_default = "192.168.1.183";
-        final String nodeRelay_ip_default = "192.168.1.161";
-        String esp32_ip = "";
-        String nodeRelay_ip = "";
-        EditText in_esp32_ip = findViewById(R.id.input_esp32_ip);
-        EditText in_nodeRelay_ip = findViewById(R.id.input_noderelay_ip);
-
-        void startup() {
-            if(!read("esp32_ip").equals("ERROR")){
-                esp32_ip = read("esp32_ip");
-                in_esp32_ip.setText(read("esp32_ip"));
-            } else {
-                esp32_ip = esp32_ip_default;
-                in_esp32_ip.setText(esp32_ip_default);
-            }
-            if(!read("nodeRelay_ip").equals("ERROR")){
-                nodeRelay_ip = read("nodeRelay_ip");
-                in_nodeRelay_ip.setText(read("nodeRelay_ip"));
-            } else {
-                nodeRelay_ip = nodeRelay_ip_default;
-                in_nodeRelay_ip.setText(nodeRelay_ip_default);
-            }
-        }
         void write(String key, String value) {
             editor.putString(key, value);
             editor.apply();
@@ -104,9 +81,14 @@ public class MainActivity extends AppCompatActivity {
         // Declarations
 
         // Settings related
+        final String esp32_ip_default = "192.168.1.183";
+        final String nodeRelay_ip_default = "192.168.1.161";
         final settings prefsSet = new settings();
-        prefsSet.startup();
         Button prefsSave_button = findViewById(R.id.saveButton);
+        final EditText in_esp32_ip = findViewById(R.id.input_esp32_ip);
+        final EditText in_nodeRelay_ip = findViewById(R.id.input_noderelay_ip);
+        String esp32_ip = "";
+        String nodeRelay_ip = "";
 
         final ToggleButton esp32_led_toggle = findViewById(R.id.esp32_led_toggle);
         final ToggleButton relay0_toggle = findViewById(R.id.relay0_toggle);
@@ -114,12 +96,28 @@ public class MainActivity extends AppCompatActivity {
         final ToggleButton relay2_toggle = findViewById(R.id.relay2_toggle);
         final ToggleButton relay3_toggle = findViewById(R.id.relay3_toggle);
 
+        // Get saved settings
+        if(!prefsSet.read("esp32_ip").equals("ERROR")){
+            esp32_ip = prefsSet.read("esp32_ip");
+            in_esp32_ip.setText(prefsSet.read("esp32_ip"));
+        } else {
+            esp32_ip = esp32_ip_default;
+            in_esp32_ip.setText(esp32_ip_default);
+        }
+        if(!prefsSet.read("nodeRelay_ip").equals("ERROR")){
+            nodeRelay_ip = prefsSet.read("nodeRelay_ip");
+            in_nodeRelay_ip.setText(prefsSet.read("nodeRelay_ip"));
+        } else {
+            nodeRelay_ip = nodeRelay_ip_default;
+            in_nodeRelay_ip.setText(nodeRelay_ip_default);
+        }
+
         //communications part
-        final http_comm esp32_comm_0 = new http_comm(prefsSet.esp32_ip);
-        final http_comm relay_node_comm_0 = new http_comm(prefsSet.nodeRelay_ip);
-        final http_comm relay_node_comm_1 = new http_comm(prefsSet.nodeRelay_ip);
-        final http_comm relay_node_comm_2 = new http_comm(prefsSet.nodeRelay_ip);
-        final http_comm relay_node_comm_3 = new http_comm(prefsSet.nodeRelay_ip);
+        final http_comm esp32_comm_0 = new http_comm(esp32_ip);
+        final http_comm relay_node_comm_0 = new http_comm(nodeRelay_ip);
+        final http_comm relay_node_comm_1 = new http_comm(nodeRelay_ip);
+        final http_comm relay_node_comm_2 = new http_comm(nodeRelay_ip);
+        final http_comm relay_node_comm_3 = new http_comm(nodeRelay_ip);
 
         // Disable buttons
         esp32_led_toggle.setEnabled(false);
@@ -203,8 +201,8 @@ public class MainActivity extends AppCompatActivity {
         prefsSave_button.setOnClickListener(new View.OnClickListener() {    // Save preferences button
             @Override
             public void onClick(View view) {
-                prefsSet.write("esp32_ip", prefsSet.in_esp32_ip.getText().toString());
-                prefsSet.write("nodeRelay_ip", prefsSet.in_nodeRelay_ip.getText().toString());
+                prefsSet.write("esp32_ip", in_esp32_ip.getText().toString());
+                prefsSet.write("nodeRelay_ip", in_nodeRelay_ip.getText().toString());
 
                 // Restart function
                 Activity current = MainActivity.this;   // Get parent activity
