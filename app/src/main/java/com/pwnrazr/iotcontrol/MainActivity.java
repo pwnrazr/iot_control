@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                         StringBuilder result = new StringBuilder();
                         String inputLine;
                         while ((inputLine = in.readLine()) != null)
-                            result.append(inputLine).append("\n");
+                            result.append(inputLine);
 
                         if(connection.getResponseCode()!=204) {     // Guard from crashing due to result being empty when a command is sent (receive no content)
                             content_split = result.toString().split(",");
