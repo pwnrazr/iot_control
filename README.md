@@ -12,6 +12,6 @@ https://github.com/pwnrazr/ESP8266_Room-Lights-Control/commit/a3f4c5e6cd2501ea6a
 - Implement RGB control for ambient LED
 - Move IP address settings to its own settings page
 
-For microcontroller side changes:
-- https://github.com/pwnrazr/ESP32_Ambient_Lighting/tree/webServ
-- https://github.com/pwnrazr/ESP8266_Room-Lights-Control/tree/webServ
+For microcontroller side:
+- https://github.com/pwnrazr/ESP32_Ambient_Lighting
+- https://github.com/pwnrazr/ESP8266_Room-Lights-Control
