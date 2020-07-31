@@ -1,6 +1,7 @@
 package com.pwnrazr.iotcontrol;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +9,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
@@ -71,11 +72,30 @@ public class MainActivity extends AppCompatActivity {
             return sharedPref.getString(key, "ERROR");
         }
 }
-
+    // Toolbar stuff
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings_menu: {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);      // Goto settings page
+                break;
+            }
+            // case blocks for other MenuItems (if any)
+        }
+        return true;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {    // The actual program
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar main_toolbar =findViewById(R.id.main_toolbar);
+        setSupportActionBar(main_toolbar);
 
         // Declarations
 
@@ -83,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         final String esp32_ip_default = "192.168.1.183";
         final String nodeRelay_ip_default = "192.168.1.161";
         final settings prefsSet = new settings();
-        Button settings_button = findViewById(R.id.settingsButton);
         String esp32_ip = "";
         String nodeRelay_ip = "";
 
@@ -192,14 +211,6 @@ public class MainActivity extends AppCompatActivity {
                 start();
             }
         }.start();
-
-        settings_button.setOnClickListener(new View.OnClickListener() {    // Go to settings page
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);      // Goto settings page
-            }
-        });
 
         esp32_led_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {  // Ambient LED
             @Override

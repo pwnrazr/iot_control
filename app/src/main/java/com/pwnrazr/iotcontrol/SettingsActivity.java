@@ -6,12 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class SettingsActivity extends AppCompatActivity {
     @Override
@@ -34,14 +35,20 @@ public class SettingsActivity extends AppCompatActivity {
             return sharedPref.getString(key, "ERROR");
         }
     }
+
+    // Toolbar stuff
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) { // Not really needed but I'll just keep this here as a placeholder
+        getMenuInflater().inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        Toolbar settings_toolbar = findViewById(R.id.settings_toolbar);
+        setSupportActionBar(settings_toolbar);
 
         // Settings related
         final settings prefsSet = new settings();
@@ -60,5 +67,4 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
     }
-
 }
