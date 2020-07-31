@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Network"
+        app:icon="@drawable/settings_input_antenna_black_24dp">
+
+        <EditTextPreference
+            android:defaultValue="127.0.0.1"
+            android:icon="@drawable/cloud_black_24dp"
+            android:key="esp32_ip"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="ESP32 ip address" />
+        <EditTextPreference
+            android:defaultValue="Default value"
+            android:icon="@drawable/cloud_black_24dp"
+            android:key="nodeRelay_ip"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="NodeRelay ip address" />
+    </PreferenceCategory>
+</PreferenceScreen>

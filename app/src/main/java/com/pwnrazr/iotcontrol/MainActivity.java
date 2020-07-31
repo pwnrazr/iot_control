@@ -2,6 +2,7 @@ package com.pwnrazr.iotcontrol;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -60,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
     public class settings {
         Context context = getApplicationContext();
-        SharedPreferences sharedPref = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref =
+                PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPref.edit();
 
         void write(String key, String value) {
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         String read(String key) {
             return sharedPref.getString(key, "ERROR");
         }
-}
+    }
     // Toolbar stuff
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
