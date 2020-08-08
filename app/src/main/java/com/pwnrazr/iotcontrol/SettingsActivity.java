@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,7 +14,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {   // Start a new MainActivity so that values are reloaded
         Activity current = this;   // Get parent activity
-        current.startActivity(new Intent(this, MainActivity.class));    // Start a same new one
+        current.startActivity(new Intent(this, MainActivity.class));    // Start a new mainActivity
         current.finish();   // Finish current
     }
 
@@ -36,6 +37,15 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(settings_toolbar);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {    // Toolbar back/home button
+                Activity current = this;   // Get parent activity
+                current.startActivity(new Intent(this, MainActivity.class));    // Start a new mainActivity
+                current.finish();   // Finish current
+        }
+        return true;
+    }
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

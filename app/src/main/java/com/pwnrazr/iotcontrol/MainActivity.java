@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.settings_menu: {
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);      // Goto settings page
+                Activity current = this;   // Get parent activity
+                current.finish();   // Finish current
                 break;
             }
             // case blocks for other MenuItems (if any)
